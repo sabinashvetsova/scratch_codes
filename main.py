@@ -1,25 +1,37 @@
+import os.path
+
 from scratch_codes import ScratchCode
-import sys
-from utils import get_value
+from utils import get_value, write_json_data, get_json_data
 
 
 if __name__ == "__main__":
 
-    serial_number_length = int(input('Введите длину серийного номера: '))
+    mode = input('Введите 1, если хотите войти в режим генерации скретч-кодов.\n'
+                 'Введите 2, если хотите войти в режим проверки скретч-кодов: ')
 
-    hash_types = get_value('hash_functions')
-    delimiter = ', '
-    hash_type = input(f'Выберите одну из хэш-функций ({delimiter.join(hash_types)}): ')
-    if hash_type not in hash_types:
-        print('Неправильный выбор')
-        sys.exit()
-
-    hash_length = int(input('Введите количество знаков, которые берутся от хэш-функции: '))
+    hash_type = get_value('hash_type')
+    hash_length = get_value('hash_length')
+    first_serial_number = get_value('first_serial_number')
+    first_serial_number_length = len(first_serial_number)
 
     scratch = ScratchCode()
 
-    scratch_code = scratch.generate(serial_number_length, hash_type, hash_length)
-    print(f'Скретч-код: {scratch_code}')
+    if mode == '1':
+        filename = input('Введите имя файла, куда будут записаны скретч-коды: ')
 
-    is_right = 'Да' if scratch.check(scratch_code, serial_number_length, hash_type, hash_length) else 'Нет'
-    print(f'Правильный? {is_right}')
+        scratch_codes_count = get_value('scratch_codes_count')
+        serial_number_length = len(str(int(first_serial_number) + scratch_codes_count).zfill(first_serial_number_length))
+        scratch_codes = scratch.generate(serial_number_length, hash_type, hash_length, scratch_codes_count)
+        write_json_data(scratch_codes, filename)
+
+    if mode == '2':
+        filename = input('Введите имя файла, откуда будут взяты скретч-коды для проверки: ')
+
+        if os.path.exists(filename):
+            scratch_codes = get_json_data(filename)
+            serial_number_length = len(str(int(first_serial_number) + len(scratch_codes)).zfill(first_serial_number_length))
+            checked_codes = scratch.check(scratch_codes, serial_number_length, hash_type, hash_length)
+            print(checked_codes)
+
+        else:
+            print('Проверяемый файл не существует.')

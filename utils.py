@@ -1,23 +1,22 @@
 import json
 
 
-def get_config():
-    with open('config.json') as f:
+CONFIG_FILE_PATH = 'config.json'
+
+def get_json_data(path):
+    with open(path) as f:
         data = json.load(f)
     return data
 
+def write_json_data(data, path):
+    with open(path, 'w') as f:
+        json.dump(data, f)
+
 def get_value(key):
-    data = get_config()
+    data = get_json_data(CONFIG_FILE_PATH)
     return data[key]
 
 def update_value(key, value):
-    data = get_config()
+    data = get_json_data(CONFIG_FILE_PATH)
     data[key] = value
-    with open('config.json', 'w') as f:
-        json.dump(data, f)
-
-def generate_serial_number(serial_number_length):
-    last_serial_number = int(get_value('last_serial_number'))
-    serial_number = str(last_serial_number + 1).zfill(serial_number_length)
-    update_value("last_serial_number", serial_number)
-    return serial_number
+    write_json_data(data, CONFIG_FILE_PATH)

@@ -1,5 +1,7 @@
 {
-  "hash_functions": ["sha1", "sha256", "sha384", "sha512", "blake2b", "md5"],
-  "key": "JFdhg67573t6g^&f#g^Gdgs%^f6G#yoiehf",
-  "last_serial_number": "00001"
+  "hash_type": "md5",
+  "hash_length": 10,
+  "first_serial_number": "00001",
+  "scratch_codes_count": 20,
+  "key": "JFdhg67573t6g^&f#g^Gdgs%^f6G#yoiehf"
 }
