@@ -3,5 +3,9 @@
   "hash_length": 10,
   "first_serial_number": "00001",
   "scratch_codes_count": 20,
-  "key": "JFdhg67573t6g^&f#g^Gdgs%^f6G#yoiehf"
+  "key": "JFdhg67573t6g^&f#g^Gdgs%^f6G#yoiehf",
+  "db_user": "user",
+  "db_password": "pass",
+  "db_host": "127.0.0.1",
+  "db_name": "scratch_codes"
 }

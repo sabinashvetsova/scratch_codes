@@ -1,7 +1,6 @@
 import os.path
 
 from scratch_codes import ScratchCode
-from db import Database
 from utils import get_value, write_json_data, get_json_data
 
 
@@ -36,11 +35,8 @@ if __name__ == "__main__":
         if os.path.isfile(filename):
             scratch_codes = get_json_data(filename)
             serial_number_length = len(str(int(first_serial_number) + len(scratch_codes)).zfill(first_serial_number_length))
+            scratch.create_activated_codes_table()
             checked_codes = scratch.check(scratch_codes, serial_number_length, hash_type, hash_length)
-
-            db = Database()
-            checked_codes = db.check_codes(checked_codes)
-
             print(checked_codes)
 
         else:

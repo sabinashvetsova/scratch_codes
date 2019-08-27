@@ -18,27 +18,33 @@ class HashCode:
         elif hash_name == 'md5':
             self.hash_func = self.md5hash
 
-    def sha1hash(self, input):
+    @staticmethod
+    def sha1hash(input):
         bytes_string = str.encode(input)
         return hashlib.sha1(bytes_string).hexdigest()
 
-    def sha256hash(self, input):
+    @staticmethod
+    def sha256hash(input):
         bytes_string = str.encode(input)
         return hashlib.sha256(bytes_string).hexdigest()
 
-    def sha384hash(self, input):
+    @staticmethod
+    def sha384hash(input):
         bytes_string = str.encode(input)
         return hashlib.sha384(bytes_string).hexdigest()
 
-    def sha512hash(self, input):
+    @staticmethod
+    def sha512hash(input):
         bytes_string = str.encode(input)
         return hashlib.sha512(bytes_string).hexdigest()
 
-    def md5hash(self, input):
+    @staticmethod
+    def md5hash(input):
         bytes_string = str.encode(input)
         return hashlib.md5(bytes_string).hexdigest()
 
-    def blake2bhash(self, input):
+    @staticmethod
+    def blake2bhash(input):
         bytes_string = str.encode(input)
         return hashlib.blake2b(bytes_string).hexdigest()
 
