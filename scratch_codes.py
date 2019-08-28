@@ -35,7 +35,14 @@ class ScratchCode:
 
     def check(self, user_codes, serial_number_length, hash_type, hash_length):
         """
-        Проверяет скретч-коды.
+        Проверяет скретч-коды в 2 этапа:
+        1) Сначала вычисляет серийный номер переданного кода. Склеивает его с секретным ключом.
+        Вычисляет хэш от результата и берет определенное кол-во символов от получившейся строки.
+        Склеивает серийный номер с получившейся строкой. Полученный скретч-код сравнивает с переданным.
+        2) Если коды совпадают, то проверяет есть ли такой код в базе активированных кодов.
+        Если код еще не был активирован, заносит его в базу.
+        user_id в таблице при этом проставляется случайный для имитации ввода кода пользователем.
+
         :param user_codes: Массив проверяемых кодов
         :param serial_number_length: Длина серийного номера
         :param hash_type: Тип хэш-функции
@@ -45,6 +52,10 @@ class ScratchCode:
 
         checked_codes = {}
 
+        db = Database()
+        db.execute("SELECT code FROM activated_codes;")
+        activated_codes = db.fetchall()
+
         for code in user_codes:
             serial_number = code[:serial_number_length]
             input = serial_number + self.key
@@ -52,8 +63,12 @@ class ScratchCode:
             hash_string = hash.calc_hash(input)[:hash_length]
             scratch_code = serial_number + hash_string
 
-            if scratch_code == code:
-                checked_codes[code] = self.check_if_activated(code)
+            if scratch_code == code and code not in activated_codes:
+                db.execute("INSERT INTO activated_codes (code, user_id) VALUES (%s, %s);",
+                           (code, random.randint(1, 1000)))
+                db.commit()
+                checked_codes[code] = True
+
             else:
                 checked_codes[code] = False
 
@@ -71,24 +86,3 @@ class ScratchCode:
             code VARCHAR(255) NOT NULL,
             activation_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             user_id INT NOT NULL);""")
-
-    @staticmethod
-    def check_if_activated(code):
-        """
-        Проверяет, был ли код уже активирован до этого момента, и если не был, заносит в базу.
-        :param code: Код
-        :return: True, если скретч-код не был активирован. False, в обратном случае.
-        """
-
-        db = Database()
-        db.execute("SELECT * FROM activated_codes WHERE code = %s;", (code,))
-        activated_code = db.fetchone()
-
-        if activated_code:
-            return False
-
-        else:
-            db.execute("INSERT INTO activated_codes (code, user_id) VALUES (%s, %s);",
-                       (code, random.randint(1, 1000)))
-            db.commit()
-            return True
