@@ -54,7 +54,7 @@ class ScratchCode:
 
         db = Database()
         db.execute("SELECT code FROM activated_codes;")
-        activated_codes = db.fetchall()
+        activated_codes = [code[0] for code in db.fetchall()]
 
         for code in user_codes:
             serial_number = code[:serial_number_length]
