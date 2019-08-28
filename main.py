@@ -37,7 +37,10 @@ if __name__ == "__main__":
             serial_number_length = len(str(int(first_serial_number) + len(scratch_codes)).zfill(first_serial_number_length))
             scratch.create_activated_codes_table()
             checked_codes, right_codes = scratch.check(scratch_codes, serial_number_length, hash_type, hash_length)
-            scratch.add_new_codes(right_codes)
+
+            if right_codes:
+                scratch.add_new_codes(right_codes)
+
             print(checked_codes)
 
         else:
