@@ -23,6 +23,9 @@ class Database(object):
     def execute(self, query, params=None):
         self.cursor.execute(query, params)
 
+    def executemany(self, query, records):
+        self.cursor.executemany(query, records)
+
     def commit(self):
         self.conn.commit()
 
